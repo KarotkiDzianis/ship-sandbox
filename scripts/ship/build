@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# scripts/ship/build — copies app/ into build/, stamped with the git sha
+# it was built from (app/main.py serves this back on `/`).
+set -euo pipefail
+
+rm -rf build
+mkdir -p build/app
+cp app/main.py build/app/main.py
+git rev-parse HEAD > build/app/VERSION

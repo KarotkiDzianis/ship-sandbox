@@ -1,0 +1,14 @@
+[Unit]
+Description=Ship Sandbox E2E test app (disposable, isolated from TradePulse/other bots)
+After=network.target
+
+[Service]
+Type=simple
+User=karotki_dzianis
+WorkingDirectory=/srv/apps/ship-sandbox/current
+ExecStart=/usr/bin/python3 /srv/apps/ship-sandbox/current/app/main.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

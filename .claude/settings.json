@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(python3:*)",
+      "Bash(pip:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(graphify:*)"
+    ]
+  }
+}

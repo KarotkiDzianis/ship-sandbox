@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# scripts/ship/health — runs AFTER deploy+restart, on the deploy target
+# itself. 0 = healthy (Ship keeps the release), non-zero = unhealthy
+# (Ship auto-rolls back).
+set -euo pipefail
+
+curl --fail --silent --max-time 5 http://127.0.0.1:8091/healthz > /dev/null

@@ -1,0 +1,30 @@
+name: Ship
+
+# THIN caller into Ship's reusable workflows -- all real logic lives in
+# KarotkiDzianis/shipClaudeDeploy's own .github/workflows/. Pinned to an
+# immutable commit SHA -- bump deliberately whenever platform/ship
+# changes and this project should pick it up, never track a branch.
+#
+# This project skips the release/Telegram stage other Ship projects use:
+# registry/projects.yml marks ship-sandbox `approval: automatic`
+# (disposable sandbox, no human in the loop by design -- see this repo's
+# own CLAUDE.md) so ci feeds straight into deploy.
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-ci.yml@5b87ce0
+    with:
+      project_slug: ship-sandbox
+
+  deploy:
+    needs: ci
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@5b87ce0
+    with:
+      project_slug: ship-sandbox
+      git_sha: ${{ needs.ci.outputs.git_sha }}
+      artifact_sha256: ${{ needs.ci.outputs.artifact_sha256 }}
+      release_id: ${{ needs.ci.outputs.git_sha }}

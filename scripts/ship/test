@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# scripts/ship/test — starts app/main.py and hits both routes. Standard
+# library only, no venv/deps needed.
+set -euo pipefail
+python3 -m unittest tests.test_app -v

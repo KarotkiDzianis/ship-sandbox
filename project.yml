@@ -1,0 +1,32 @@
+schema_version: 1
+
+project:
+  slug: ship-sandbox
+  name: Ship Sandbox E2E Test
+  type: personal
+  repo: "KarotkiDzianis/ship-sandbox"
+
+context:
+  claude_rules: CLAUDE.md
+  memory_index: memory/MEMORY.md
+  project_goals: memory/project_goals.md
+  decisions: memory/decisions.md
+  blockers: memory/blockers.md
+  graph: graphify-out/
+
+skills:
+  preferred: []
+  domains: []
+
+ci:
+  test: scripts/ship/test
+  build: scripts/ship/build
+
+deploy:
+  enabled: true
+  approval: automatic
+  target: main-vm
+  service: ship-sandbox.service
+
+health:
+  command: scripts/ship/health
