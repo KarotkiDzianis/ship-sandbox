@@ -32,7 +32,7 @@ jobs:
       change_summary: "prove the real Telegram approval daemon end to end"
 
   deploy:
-    needs: release
+    needs: [ci, release]
     uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@3aac875d40fc3b7463e24887e2f6984e7a02643e
     with:
       project_slug: ship-sandbox
