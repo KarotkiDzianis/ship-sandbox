@@ -18,13 +18,13 @@ on:
 
 jobs:
   ci:
-    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-ci.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-ci.yml@3aac875d40fc3b7463e24887e2f6984e7a02643e
     with:
       project_slug: ship-sandbox
 
   release:
     needs: ci
-    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-release.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-release.yml@3aac875d40fc3b7463e24887e2f6984e7a02643e
     with:
       project_slug: ship-sandbox
       git_sha: ${{ needs.ci.outputs.git_sha }}
@@ -33,7 +33,7 @@ jobs:
 
   deploy:
     needs: release
-    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@3aac875d40fc3b7463e24887e2f6984e7a02643e
     with:
       project_slug: ship-sandbox
       git_sha: ${{ needs.ci.outputs.git_sha }}
