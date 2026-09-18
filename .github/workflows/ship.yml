@@ -5,10 +5,12 @@ name: Ship
 # immutable commit SHA -- bump deliberately whenever platform/ship
 # changes and this project should pick it up, never track a branch.
 #
-# This project skips the release/Telegram stage other Ship projects use:
-# registry/projects.yml marks ship-sandbox `approval: automatic`
-# (disposable sandbox, no human in the loop by design -- see this repo's
-# own CLAUDE.md) so ci feeds straight into deploy.
+# TEMPORARY (2026-09-18): registry/projects.yml flips ship-sandbox's
+# approval to `telegram` (was `automatic`) to prove the real approval
+# daemon + button tap end to end, now that it's running on the VM -- so
+# this workflow temporarily goes through the full ci -> release -> deploy
+# chain like a real project would, instead of skipping straight to
+# deploy. Revert both once confirmed working.
 
 on:
   push:
@@ -16,13 +18,22 @@ on:
 
 jobs:
   ci:
-    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-ci.yml@e4b1a971865d6890ec04cec260a91b42d233ae31
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-ci.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
     with:
       project_slug: ship-sandbox
 
-  deploy:
+  release:
     needs: ci
-    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@e4b1a971865d6890ec04cec260a91b42d233ae31
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-release.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
+    with:
+      project_slug: ship-sandbox
+      git_sha: ${{ needs.ci.outputs.git_sha }}
+      artifact_sha256: ${{ needs.ci.outputs.artifact_sha256 }}
+      change_summary: "prove the real Telegram approval daemon end to end"
+
+  deploy:
+    needs: release
+    uses: KarotkiDzianis/shipClaudeDeploy/.github/workflows/reusable-deploy.yml@1bf0c886d9d07bfb334a548f07f1f860d7d35690
     with:
       project_slug: ship-sandbox
       git_sha: ${{ needs.ci.outputs.git_sha }}
