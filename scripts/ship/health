@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 # scripts/ship/health — runs AFTER deploy+restart, on the deploy target
 # itself. 0 = healthy (Ship keeps the release), non-zero = unhealthy
-# (Ship auto-rolls back).
+# (Ship auto-rolls back). Retries for a few seconds: shiplib.release.
+# run_deploy() calls restart_fn() then health_fn() with NO delay --
+# confirmed causing a real false-negative rollback (systemctl restart
+# returns before this trivial single-threaded app finishes binding its
+# port, so an immediate single curl attempt loses the race even when
+# the app is completely fine, including on the ROLLBACK's own restart+
+# recheck, which reported ROLLBACK_UNHEALTHY for a release that was
+# serving traffic seconds earlier).
 set -euo pipefail
 
-curl --fail --silent --max-time 5 http://127.0.0.1:8091/healthz > /dev/null
+for _ in 1 2 3 4 5; do
+  if curl --fail --silent --max-time 2 http://127.0.0.1:8091/healthz > /dev/null; then
+    exit 0
+  fi
+  sleep 1
+done
+exit 1
